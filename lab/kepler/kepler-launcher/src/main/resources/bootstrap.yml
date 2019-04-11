@@ -1,0 +1,64 @@
+server:
+  port: ${SERVER_PORT:15050}
+logging:
+  config: ${LOGGER_CFG_LOCATION}/${LOGGER_CFG_FILE}
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  endpoints:
+    jmx:
+      exposure:
+        include:
+        - "*"
+    web:
+      base-path: /${MGMT_CXT_PATH:actuator}
+      exposure:
+        include:
+        - "*"
+        
+spring:
+  application:
+    name: ${APP_NAME:kepler}
+  boot:
+    admin:
+      client:
+        enabled: ${ENABLE_BOOT_ADMIN_CLIENT:false}
+        url:
+        - ${BOOT_ADMIN_URL:'http://localhost:8080'}
+        auto-deregistration: true
+        instance:
+          prefer-ip: true
+  cloud:
+    config:
+      name: ${spring.application.name}
+      profile: ${spring.profiles.active}
+      label: ${CONFIG_REPO_BRANCH:master}
+      fail-fast: true
+      retry:
+        max-attempts: 20
+        max-interval: 36000
+        multiplier: 2
+      enabled: ${CONFIG_CLIENT_ENABLED:false}
+      discovery:
+        enabled: ${CONFIG_DISCOVERY_ENABLED:false}
+        service-id: ${CONFIG_SERVER_SERVICE_ID:configserver}
+  zipkin:
+    enabled: ${ZIPKIN_ENABLED:false}
+    base-url: 'http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}'
+  sleuth:
+    enabled: ${SLEUTH_ENABLED:false}
+    web:
+      enabled: ${SLEUTH_WEB_ENABLED:false}
+      skip-pattern: '(^cleanup.*)'   
+
+eureka:
+  client:
+    enabled: ${ENABLE_DISCOVERY_CLIENT:false}
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:'http://localhost:8080/eureka/'}
+  instance:
+    prefer-ip-address: true
+    appname: ${spring.application.name}
+    hostname: ${HOST_NAME:localhost}

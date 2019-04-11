@@ -1,0 +1,50 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+Untitled*
+.bak
+logs/
+
+# Eclipse
+.classpath
+/.classpath/
+.project
+/.project/
+.settings/
+/.settings/
+
+# Intellij
+.idea/
+/.idea/
+*.iml
+/*.iml/
+*.iws
+/*.iws/
+
+# Mac
+.DS_Store
+/.DS_Store/
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+
+
+# Gradle
+.gradle/
+build/
+bin/
+
+# Others
+.checkstyle/
+.checkstyle
+
+.factorypath
+.springBeans
+.factorypath/
+.springBeans/
+
+ecosystem/services/
+distribution/
+
+.pydevproject
+.attach_pid*

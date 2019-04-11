@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.consolefire</groupId>
+    <artifactId>kepler</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Kepler</name>
+    <description>Kepler on Mission</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <CONFIG_ROOT>${maven.multiModuleProjectDirectory}/config</CONFIG_ROOT>
+        <SCRIPTS_ROOT>${maven.multiModuleProjectDirectory}/scripts</SCRIPTS_ROOT>
+        <ECOSYSTEM_ROOT>${maven.multiModuleProjectDirectory}/ecosystem</ECOSYSTEM_ROOT>
+        <DISTRIBUTION_ROOT>${maven.multiModuleProjectDirectory}/distribution</DISTRIBUTION_ROOT>
+
+        <spring.boot.version>2.1.3.RELEASE</spring.boot.version>
+        <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
+        <spring.boot.admin.version>2.1.3</spring.boot.admin.version>
+        <swagger2.version>2.9.2</swagger2.version>
+
+        <orm.helper.version>2.0.0-SNAPSHOT</orm.helper.version>
+
+        <!-- Logging dependency versions -->
+        <log4j2.version>2.11.0</log4j2.version>
+        <lmax.version>3.3.7</lmax.version>
+        <!-- Instrumentation dependencies' versions -->
+        <guava.version>26.0-jre</guava.version>
+		<eclipse.jgit.version>5.3.0.201903130848-r</eclipse.jgit.version>
+        <junit.platform.version>1.3.1</junit.platform.version>
+        <junit5.version>5.3.1</junit5.version>
+        <mockito.junit5.version>2.23.0</mockito.junit5.version>
+        <surefire.version>2.22.1</surefire.version>
+        <jacoco.plugin.version>0.8.3</jacoco.plugin.version>
+        <failsafe.plugin.version>2.22.1</failsafe.plugin.version>
+        <build.helper.plugin.version>3.0.0</build.helper.plugin.version>
+
+        <remote.debug.port>43035</remote.debug.port>
+        <remote.debug.suspend>n</remote.debug.suspend>
+
+        <skip.bootrepackage>false</skip.bootrepackage>
+        <skip.bootrun>true</skip.bootrun>
+
+        <checkstyle.version>8.19</checkstyle.version>
+        <checkstyle.plugin.version>3.0.0</checkstyle.plugin.version>
+        <jacoco.plugin.version>0.8.3</jacoco.plugin.version>
+        <jacoco.skip>false</jacoco.skip>
+        <fail.on.low.coverage>true</fail.on.low.coverage>
+        <min.coverage>90</min.coverage>
+        <jacoco.agent.target>${project.build.directory}</jacoco.agent.target>
+
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>orm-helper-mvn-repo</id>
+            <url>https://raw.github.com/Consolefire/orm-helper/mvn-repo-v2/</url>
+            <!-- Optional: to always check the repo to refresh jar -->
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${spring.boot.admin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-spring-web</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.consolefire.orm.helper</groupId>
+                <artifactId>orm-helper-common</artifactId>
+                <version>${orm.helper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.consolefire.orm.helper</groupId>
+                <artifactId>orm-helper-jpa</artifactId>
+                <version>${orm.helper.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>${lmax.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!-- \/\/ JUnit 5 Dependencies !! DO NOT REMOVE version !! \/\/ -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <!-- <version>${junit5.version}</version> -->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <!-- <version>${junit5.version}</version> -->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <!-- <version>${mockito.junit5.version}</version> -->
+            <scope>test</scope>
+        </dependency>
+
+        <!-- \/\/ JUnit 5 Dependencies needed for IDE execution !! DO NOT 
+            REMOVE version !! \/\/ -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <!-- <version>${junit5.version}</version> -->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <!-- <version>${junit.platform.version}</version> -->
+            <scope>test</scope>
+        </dependency>
+        <!-- /\/\ JUnit 5 Dependencies /\/\ -->
+
+
+    </dependencies>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                        <environmentVariables>
+                            <LOGGER_CFG_LOCATION>${CONFIG_ROOT}/logger</LOGGER_CFG_LOCATION>
+                            <LOGGER_CFG_FILE>log4j2.xml</LOGGER_CFG_FILE>
+                        </environmentVariables>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>bundle-only</id>
+                            <goals>
+                                <goal>build-info</goal>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>bootrun</id>
+                            <configuration>
+                                <skip>${skip.bootrun}</skip>
+                            </configuration>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
+                    <configuration>
+                        <argLine>-Xmx1024m </argLine>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <configLocation>${CONFIG_ROOT}/code/checkstyle/checkstyle.xml</configLocation>
+                        <encoding>UTF-8</encoding>
+                        <consoleOutput>true</consoleOutput>
+                        <linkXRef>false</linkXRef>
+                        <failsOnError>false</failsOnError>
+                        <failOnViolation>false</failOnViolation>
+                        <maxAllowedViolations>0</maxAllowedViolations>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate-code</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.plugin.version}</version>
+                    <configuration>
+                        <!-- `jacoco.skip` is a Jacoco defined property, 
+                            default: false -->
+                        <skip>${jacoco.skip}</skip>
+                        <haltOnFailure>${fail.on.low.coverage}</haltOnFailure>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>pre-unit-test</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <destFile>${jacoco.agent.target}/jacoco-unit-test.exec</destFile>
+                                <propertyName>jacoco.agent.unit.test.arg</propertyName>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>check</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${jacoco.agent.target}/jacoco-unit-test.exec</dataFile>
+                                <rules>
+                                    <rule>
+                                        <element>CLASS</element>
+                                        <limits>
+                                            <limit>
+                                                <counter>LINE</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>${min.coverage}</minimum>
+                                            </limit>
+                                            <limit>
+                                                <counter>BRANCH</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>${min.coverage}</minimum>
+                                            </limit>
+                                            <limit>
+                                                <counter>INSTRUCTION</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>${min.coverage}</minimum>
+                                            </limit>
+                                        </limits>
+                                        <excludes>
+                                            <exclude>com.cf.service.cfg.*</exclude>
+                                        </excludes>
+                                    </rule>
+                                    <rule
+                                        implementation="org.jacoco.maven.RuleConfiguration">
+                                        <element>BUNDLE</element>
+                                        <limits>
+                                            <limit
+                                                implementation="org.jacoco.report.check.Limit">
+                                                <counter>INSTRUCTION</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>${min.coverage}</minimum>
+                                            </limit>
+                                            <limit
+                                                implementation="org.jacoco.report.check.Limit">
+                                                <counter>CLASS</counter>
+                                                <value>MISSEDCOUNT</value>
+                                                <maximum>0</maximum>
+                                            </limit>
+                                        </limits>
+                                    </rule>
+                                </rules>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>pre-it-test</id>
+                            <!-- hack ordering -->
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <destFile>${jacoco.agent.target}/jacoco-integration-test.exec</destFile>
+                                <propertyName>jacoco.agent.integration.test.arg</propertyName>
+                                <skip>${skip.integration.tests}</skip>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>merge</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>merge</goal>
+                            </goals>
+                            <configuration>
+                                <fileSets>
+                                    <fileSet>
+                                        <directory>${jacoco.agent.target}</directory>
+                                        <includes>
+                                            <include>jacoco-unit-test.exec</include>
+                                            <include>jacoco-integration-test.exec</include>
+                                        </includes>
+                                    </fileSet>
+                                </fileSets>
+                                <destFile>${jacoco.agent.target}/jacoco.exec</destFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>composite</id>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <configuration>
+                                <title>Combined</title>
+                                <dataFile>${jacoco.agent.target}/jacoco.exec</dataFile>
+                                <outputDirectory>${project.reporting.outputDirectory}/jacoco-combined</outputDirectory>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>report-aggregate</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report-aggregate</goal>
+                            </goals>
+                            <configuration>
+                                <title>JaCoCo</title>
+                                <footer>Code Coverage Report
+                                    ${project.version}</footer>
+                                <includes>
+                                    <!-- Analyze class files only to exclude 
+                                        shaded agent JAR from report -->
+                                    <include>**/*.class</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>com.cf.service.cfg.*</exclude>
+                                </excludes>
+                                <dataFileIncludes>
+                                    <dataFileInclude>**/target/jacoco/jacoco.exec</dataFileInclude>
+                                </dataFileIncludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                            <configuration>
+                                <argLine>${jacoco.agent.unit.test.arg}
+                                    -Xss1024k -Xms256m
+                                    -Xmx1280m
+                                    -XX:MaxMetaspaceSize=256m</argLine>
+                                <includes>
+                                    <include>**/*Test.java</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>**/*IT.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build.helper.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>add-test-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/it/java</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${failsafe.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>it</id>
+                            <phase>integration-test</phase>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                            <configuration>
+                                <argLine>${jacoco.agent.integration.test.arg}</argLine>
+                                <testSourceDirectory>src/it/java</testSourceDirectory>
+                                <includes>
+                                    <include>**/*IT.java</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>**/*Test.java</exclude>
+                                </excludes>
+                                <forkCount>0</forkCount>
+                                <skip>${skip.integration.tests}</skip>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                            <configuration>
+                                <skip>${skip.integration.tests}</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <modules>
+        <module>kepler-common</module>
+        <module>kepler-core</module>
+        <module>kepler-model</module>
+        <module>kepler-scanner</module>
+        <module>kepler-probe</module>
+        <module>kepler-reporter</module>
+        <module>kepler-mission-control</module>
+        <module>kepler-launcher</module>
+        <module>kepler-repository</module>
+    </modules>
+</project>
